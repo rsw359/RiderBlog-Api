@@ -11,31 +11,24 @@ const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
 const categoryRoute = require("./routes/categories");
 const passport = require("passport");
+
 const cookieSession = require("cookie-session");
+
+const crypto = require("crypto");
 
 //Use
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3002;
+
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "/images")));
 
 app.use(
   cookieSession({
     name: "session",
-    keys: ["riderblog"],
+    keys: ["rider-diary"],
     maxAge: 24 * 60 * 60 * 100,
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.use(
-  cors({
-    origin: "http://localhost:3002",
-    methods: "GET,PUT,POST,DELETE",
-    credentials: true,
   })
 );
 
@@ -57,6 +50,18 @@ const upload = multer({ storage: storage });
 app.post("/api/upload", upload.single("file"), (req, res) => {
   res.status(200).json("File successfully uploaded");
 });
+
+// initialize passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,PUT,POST,DELETE",
+    credentials: true,
+  })
+);
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
