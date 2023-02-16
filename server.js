@@ -10,6 +10,9 @@ const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
 const categoryRoute = require("./routes/categories");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const passport = require("passport");
+const cookieSession = require("cookie-session");
 
 //Use
 dotenv.config();
@@ -17,6 +20,25 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "/images")));
+
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["riderblog"],
+    maxAge: 24 * 60 * 60 * 100,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,PUT,POST,DELETE",
+    credentials: true,
+  })
+);
 
 mongoose
   .connect(process.env.MONGO_URL)
