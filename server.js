@@ -10,7 +10,6 @@ const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
 const categoryRoute = require("./routes/categories");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 
@@ -34,7 +33,7 @@ app.use(passport.session());
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3002",
     methods: "GET,PUT,POST,DELETE",
     credentials: true,
   })

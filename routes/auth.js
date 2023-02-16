@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
 //REGISTER
 router.post("/register", async (req, res) => {
@@ -34,6 +35,41 @@ router.post("/login", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+//Oauth
+router.get("/auth/login/success", (req, res) => {
+  if (req.user) {
+    res.status(200).json({
+      error: false,
+      message: "Login Successful",
+      user: req.user,
+    });
+  } else {
+    res.status(403).json({ error: true, message: "Not Athorized" });
+  }
+});
+
+router.get("/auth/login/failed", (req, res) => {
+  res.status(401).json({
+    error: true,
+    message: "Unauthorized",
+  });
+});
+
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    successRedirect: process.env.CLIENT_URL,
+    failureRedirect: "/login/failed",
+  })
+);
+
+router.get("/google", passport.authenticate("google", ["profile", "email"]));
+
+router.get("/logout", (req, res) => {
+  req.logout();
+  res.redirect(process.env.CLIENT_URL);
 });
 
 module.exports = router;
