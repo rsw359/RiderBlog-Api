@@ -6,12 +6,16 @@ const cors = require("cors");
 const multer = require("multer");
 const { response } = require("express");
 const path = require("path");
+const socialAuthRoute = require("./routes/social-auth");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
 const categoryRoute = require("./routes/categories");
+const cookieSession = require("cookie-session");
+const passport = require("passport");
+require("./passport");
 
-//Use
+// Use
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -41,6 +45,26 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/categories", categoryRoute);
+
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["tron"],
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
+app.use("/auth", socialAuthRoute);
 
 // Error Handling
 
