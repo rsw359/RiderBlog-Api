@@ -6,15 +6,13 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/api/auth/google/callback",
-      scope: ["profile", "email"],
+      callbackURL: "/auth/google/callback",
     },
-    function (accessToken, refreshToken, profile, callback) {
-      callback(null, profile);
+    function (accessToken, refreshToken, profile, done) {
+      done(null, profile);
     }
   )
 );
-
 passport.serializeUser((user, done) => {
   done(null, user);
 });
