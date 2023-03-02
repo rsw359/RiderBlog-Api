@@ -10,19 +10,14 @@ passport.use(
       callbackURL: "/auth/google/callback",
     },
     function (accessToken, refreshToken, profile, done) {
+      // console.log(profile);
       done(null, profile);
     }
   )
 );
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user);
 });
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err, null);
-  }
+passport.deserializeUser((user, done) => {
+  done(null, user);
 });
