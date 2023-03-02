@@ -6,7 +6,6 @@ const cors = require("cors");
 const multer = require("multer");
 const { response } = require("express");
 const path = require("path");
-const socialAuthRoute = require("./routes/social-auth");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
@@ -64,7 +63,6 @@ app.use(
     credentials: true,
   })
 );
-app.use("/auth", socialAuthRoute);
 
 // Error Handling
 
