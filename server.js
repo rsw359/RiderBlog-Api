@@ -57,7 +57,7 @@ app.use(passport.session());
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://riderblog.onrender.com",
     methods: "GET,PUT,POST,DELETE",
     credentials: true,
   })
